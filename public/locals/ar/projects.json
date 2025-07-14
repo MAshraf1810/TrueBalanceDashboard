@@ -1,0 +1,50 @@
+{
+  "projects": {
+    "header": "المشاريع",
+    "actions": {
+      "add": "إضافة مشروع",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "columns": {
+      "title": "العنوان",
+      "type": "النوع"
+    },
+    "modal": {
+      "confirm": "تأكيد",
+      "cancel": "إلغاء",
+      "delete": {
+        "message": "هل أنت متأكد من أنك تريد حذف هذا المشروع؟"
+      }
+    },
+    "form": {
+      "header": "إضافة مشروع",
+      "title": "العنوان",
+      "type": "النوع",
+      "description": "الوصف",
+      "submit": "حفظ",
+      "status": "الحالة",
+      "statusOptions": {
+        "canceled": "ملغي",
+        "completed": "تم التسليم"
+      },
+      "typeOptions": {
+        "residential": "منطقة سكنية",
+        "commercial": "منطقة تجارية"
+      },
+      "address": "الموقع",
+      "images": "الصور",
+      "placeholder": {
+        "titleAr": "أدخل عنوان المشروع بالعربية",
+        "titleEn": "أدخل عنوان المشروع بالإنجليزية",
+        "descriptionAr": "أدخل وصف المشروع بالعربية",
+        "descriptionEn": "أدخل وصف المشروع بالإنجليزية",
+        "addressAr": "أدخل عنوان المشروع بالعربية",
+        "addressEn": "أدخل عنوان المشروع بالإنجليزية",
+        "images": "أدخل صور المشروع",
+        "status": "اختر حالة المشروع",
+        "type": "اختر نوع المشروع"
+      }
+    }
+  }
+}

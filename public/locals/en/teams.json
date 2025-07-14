@@ -1,0 +1,48 @@
+{
+    "teams": {
+      "header": "Teams",
+      "actions": {
+        "add": "Add Team",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "columns": {
+        "title": "Title",
+        "type": "Type"
+      },
+      "modal": {
+        "confirm": "I'm sure",
+        "cancel": "Cancel",
+        "delete": {
+          "message": "Are you sure?"
+        }
+      },
+      "form": {
+        "header": "Add Team",
+        "title": "Title",
+        "type": "Type",
+        "description": "Description",
+        "submit": "Submit",
+        "status": "Status",
+        "statusOptions": {
+          "canceled": "Canceled",
+          "completed": "Completed"
+        },
+        "typeOptions": {
+          "residential": "Residential Zone",
+          "commercial": "Commercial Zone"
+        },
+        "address": "Address",
+        "images": "Images",
+        "placeholder": {
+          "title": "Enter Team Title",
+          "description": "Enter Team Description",
+          "address": "Enter Team Address",
+          "images": "Enter Team Images",
+          "status": "Select Team Status",
+          "type": "Select Team Type"
+        }
+      }
+    }
+  }
+  

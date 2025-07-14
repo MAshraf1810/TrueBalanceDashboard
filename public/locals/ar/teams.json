@@ -1,0 +1,49 @@
+{
+    "teams": {
+      "header": "الفريق",
+      "actions": {
+        "add": "إضافة فريق",
+        "edit": "تعديل",
+        "delete": "حذف"
+      },
+      "columns": {
+        "title": "العنوان",
+        "type": "النوع"
+      },
+      "modal": {
+        "confirm": "تأكيد",
+        "cancel": "إلغاء",
+        "delete": {
+          "message": "هل انتا متاكد؟"
+        }
+      },
+      "form": {
+        "header": "إضافة فريق",
+        "title": "العنوان",
+  
+        "type": "النوع",
+        "description": "الوصف",
+        "submit": "حفظ",
+        "status": "الحالة",
+        "statusOptions": {
+          "canceled": "ملغي",
+          "completed": "تم التسليم"
+        },
+        "typeOptions": {
+          "residential": "منطقة سكنية",
+          "commercial": "منطقة تجارية"
+        },
+        "address": "العنوان",
+        "images": "الصور",
+        "placeholder": {
+          "title": "أدخل عنوان الفريق",
+          "description": "أدخل وصف الفريق",
+          "address": "أدخل عنوان الفريق",
+          "images": "أدخل صور الفريق",
+          "status": "اختر حالة الفريق",
+          "type": "اختر نوع الفريق"
+        }
+      }
+    }
+  }
+  

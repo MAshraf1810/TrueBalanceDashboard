@@ -1,0 +1,7 @@
+{
+  "logout": {
+    "sure": "Do you really want to log out?",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "projects": {
+    "header": "Projects",
+    "actions": {
+      "add": "Add Project",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "columns": {
+      "title": "Title",
+      "type": "Type"
+    },
+    "modal": {
+      "confirm": "I'm sure",
+      "cancel": "Cancel",
+      "delete": {
+        "message": "Are you sure you want to delete this project?"
+      }
+    },
+    "form": {
+      "header": "Add Project",
+      "title": "Title",
+      "type": "Type",
+      "description": "Description",
+      "submit": "Submit",
+      "status": "Status",
+      "statusOptions": {
+        "canceled": "Canceled",
+        "completed": "Completed"
+      },
+      "typeOptions": {
+        "residential": "Residential Zone",
+        "commercial": "Commercial Zone"
+      },
+      "address": "Address",
+      "images": "Images",
+      "placeholder": {
+        "titleAr": "Enter project title in Arabic",
+        "titleEn": "Enter project title in English",
+        "descriptionAr": "Enter project description in Arabic",
+        "descriptionEn": "Enter project description in English",
+        "addressAr": "Enter project address in Arabic",
+        "addressEn": "Enter project address in English",
+        "images": "Enter Project Images",
+        "status": "Select Project Status",
+        "type": "Select Project Type"
+      }
+    }
+  }
+}
