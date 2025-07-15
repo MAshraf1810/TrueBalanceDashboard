@@ -28,13 +28,14 @@ import UnauthorizedPage from "./views/ui/UnauthorizedPage";
 import Layout from "./views/ui/Layout";
 import AddPackageForm from "./views/menu/packages/AddPackageForm";
 import Packages from "./views/menu/packages/Packages";
-import Blogs from "./views/menu/booking/Booking";
-import AddBlogsForm from "./views/menu/booking/AddBlogsForm";
 import BlockDates from "./views/menu/block/BlockDatesLIst";
 import AddBlockedForm from "./views/menu/block/AddBlockDatesForm";
 import Doctors from "./views/menu/doctors/Doctors";
 import AddDoctorForm from "./views/menu/doctors/AddDoctorForm";
 import Specilizations from "./views/menu/specilization/Specilizations";
+// import Booking from "./views/menu/booking/Booking";
+import Blogs from "./views/menu/blogs/Blogs";
+import AddBlogsForm from "./views/menu/blogs/AddBlogsForm";
 
 function App() {
   useEffect(() => {
@@ -91,6 +92,7 @@ function App() {
           <Route path="/projects/add/:id" element={<AddProjectForm />} />
           {/* Projects Routes */}
 
+
           {/* Login Routes */}
           <Route path="login" element={<Login />} />
           <Route path="/" element={<Projects />} />
@@ -113,6 +115,12 @@ function App() {
           <Route path="/services/add" element={<AddServicesForm />} />
           <Route path="/services/add/:id" element={<AddServicesForm />} />
           {/* Services Routes */}
+
+          {/* blogs Routes */}
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blogs/add" element={<AddBlogsForm />} />
+          <Route path="/blogs/add/:id" element={<AddBlogsForm />} />
+          {/* blogs Routes */}
 
           {/* Sliders Routes */}
           <Route path="/sliders" element={<Sliders />} />
@@ -141,9 +149,9 @@ function App() {
           {/* Packages Routes */}
 
           {/*booking */}
-          <Route path="/booking" element={<Blogs />} />
-          <Route path="/blogs/add" element={<AddBlogsForm />} />
-          <Route path="/blogs/view/:id" element={<AddBlogsForm />} />
+          {/* <Route path="/booking" element={<Booking />} /> */}
+          {/* <Route path="/booking/add" element={<AddBlogsForm />} /> */}
+          {/* <Route path="/booking/view/:id" element={<AddBlogsForm />} /> */}
           {/* booking*/}
 
           {/* blocks*/}

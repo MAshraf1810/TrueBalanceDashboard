@@ -132,6 +132,13 @@ const Sidebar = ({ isOpen }: { isOpen: (bool: boolean) => void }) => {
             <span className="capitalize ">Block Dates</span>
           </NavLink>
           <NavLink
+            to={`/blogs`}
+            className={({ isActive }) => (isActive ? activeLink : normalLink)}
+          >
+            <PiMicrosoftTeamsLogoFill />
+            <span className="capitalize ">Blogs</span>
+          </NavLink>
+          <NavLink
             to={`/pages`}
             className={({ isActive }) => (isActive ? activeLink : normalLink)}
           >
@@ -158,6 +165,13 @@ const Sidebar = ({ isOpen }: { isOpen: (bool: boolean) => void }) => {
           >
             <RiUserSearchFill />
             <span className="capitalize ">Sponsors</span>
+          </NavLink>
+          <NavLink
+            to={`/reviews`}
+            className={({ isActive }) => (isActive ? activeLink : normalLink)}
+          >
+            <RiUserSearchFill />
+            <span className="capitalize ">Reviews</span>
           </NavLink>
           <NavLink
             to={`/settings`}

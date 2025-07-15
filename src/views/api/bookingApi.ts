@@ -55,11 +55,11 @@ export const getBooking = async (currentPage: string) => {
   const res = await apiClient.get<FetchTeamsResponse>(
     `${Booking_API_ENDPOINT}?page=${currentPage}`
   );
-  console.log("blogs=>", res.data.data.data);
+  console.log("booking=>", res.data.data.data);
   return res.data.data;
 };
 
-export const addBlogMutation = async ({
+export const addBookingMutation = async ({
   formData,
   blogId,
 }: {
@@ -86,7 +86,7 @@ export const getBlog = async (blogId: string) => {
   return res.data.data;
 };
 
-export const deleteBlogMutation = async (blogId: any) => {
+export const deleteBookingMutation = async (blogId: any) => {
   // Make a POST request to delete the project
   const res = await apiClient.post(`${Booking_API_ENDPOINT}/${blogId}`, {
     _method: "delete",

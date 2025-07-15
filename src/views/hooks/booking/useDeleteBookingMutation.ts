@@ -1,23 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import handlingErrorOnStatusCode from "../../services/handlingErrorOnStatusCode";
-import { AddProjectResponse } from "../../api/projectsApi";
+import { DeleteProjectResponse } from "../../api/projectsApi";
 import { showToast } from "../../services/ShowToast";
-import { addBlogMutation } from "../../api/bookingApi";
+import { deleteBookingMutation } from "../../api/bookingApi";
 
 // Custom hook for deleting a project
-export const useAddBlogsMutation = () => {
+export const useDeleteBookingMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<AddProjectResponse, Error, any>({
-    mutationFn: addBlogMutation,
+  return useMutation<DeleteProjectResponse, Error, any>({
+    mutationFn: deleteBookingMutation,
     onSuccess: () => {
       // Invalidate the projects query to refetch the data
       queryClient.invalidateQueries({
-        queryKey: ["blogs"],
+        queryKey: ["booking"],
       });
 
       // Show a success message
-      showToast("Blogs has been added successfully!", "success");
+      showToast("Booking has been Deleted successfully!", "success");
     },
     onError: (error: unknown) => {
       // Show a user-friendly error message

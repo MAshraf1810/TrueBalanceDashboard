@@ -1,6 +1,6 @@
 import TextInputWithHook from "./TextInputWithHook";
 
-const AddingBlogFormUi = () => {
+const AddingBookingFormUi = () => {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 bg-white p-4 rounded-lg ">
       <TextInputWithHook
@@ -133,4 +133,4 @@ separation_anxiety
   );
 };
 
-export default AddingBlogFormUi;
+export default AddingBookingFormUi;

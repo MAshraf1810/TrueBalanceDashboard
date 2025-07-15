@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { IoIosEye } from "react-icons/io";
 import { Booking } from "../../api/bookingApi";
 
-interface ProjectsTableProps {
+interface BookingTableProps {
   headers: string[];
   lang: "en" | "ar";
   data: Booking[];
@@ -10,38 +10,38 @@ interface ProjectsTableProps {
   onView: (id: number) => void;
 }
 
-const BlogsTable = ({ data, headers, onView }: ProjectsTableProps) => {
+const BookingTable = ({ data, headers, onView }: BookingTableProps) => {
   useEffect(() => {
-    console.log("DEBUG=>", data);
+    console.log("Bookings =>", data);
   }, [data]);
+
   return (
     <div className="overflow-x-auto text-black">
-      <table className="table bg-white overflow-hidden rounded-[10px]">
-        {/* head */}
+      <table className="table bg-white rounded-lg">
         <thead className="bg-[#F9F9F9] text-[#868C98]">
           <tr>
             {headers.map((header, index) => (
-              <th className="border-r border-gray-200" key={index}>
+              <th key={index} className="border-r border-gray-200">
                 {header}
               </th>
             ))}
-            <th className="border-r border-gray-200">Action</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {data?.length > 0 ? (
-            data.map((team: Booking) => (
-              <tr key={team.id}>
-                <td>{team.user_name}</td>
-                <td>{team.service}</td>
-                <td>{team.first_session_date}</td>
-                <td>{team.booking_date}</td>
-                <td>{team.amount}</td>
-                <td>{team.total_session}</td>
+          {data.length > 0 ? (
+            data.map((booking) => (
+              <tr key={booking.id}>
+                <td>{booking.user_name}</td>
+                <td>{booking.service}</td>
+                <td>{booking.first_session_date}</td>
+                <td>{booking.booking_date}</td>
+                <td>{booking.amount}</td>
+                <td>{booking.total_session}</td>
                 <td className="flex items-center gap-3">
                   <button
-                    onClick={() => onView(team.id)}
-                    className="btn btn-xs bg-bruColorLight3"
+                    onClick={() => onView(booking.id)}
+                    className="btn btn-xs bg-blue-100 text-blue-700"
                   >
                     View <IoIosEye />
                   </button>
@@ -50,7 +50,7 @@ const BlogsTable = ({ data, headers, onView }: ProjectsTableProps) => {
             ))
           ) : (
             <tr>
-              <td className="text-black font-bold" colSpan={headers.length + 1}>
+              <td className="text-center text-black font-bold" colSpan={headers.length + 1}>
                 No data found
               </td>
             </tr>
@@ -61,4 +61,4 @@ const BlogsTable = ({ data, headers, onView }: ProjectsTableProps) => {
   );
 };
 
-export default BlogsTable;
+export default BookingTable;
