@@ -14,9 +14,7 @@ const textSchema = z.object({
 export const addBlogSchema = z.object({
     title: titleSchema,
     text: textSchema,
-    status: z.enum(["0", "1"], {
-        required_error: "Status is required",
-    }),
+    status: z.enum(["0", "1"]).optional(),
     background: z
         .any()
         .refine(
@@ -24,6 +22,7 @@ export const addBlogSchema = z.object({
             { message: "Image is required" }
         ),
 });
+
 
 export const updateBlogSchema = z.object({
     title: titleSchema.partial().optional(),
