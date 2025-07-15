@@ -36,6 +36,8 @@ import Specilizations from "./views/menu/specilization/Specilizations";
 // import Booking from "./views/menu/booking/Booking";
 import Blogs from "./views/menu/blogs/Blogs";
 import AddBlogsForm from "./views/menu/blogs/AddBlogsForm";
+import Reviews from "./views/menu/reviews/Reviews";
+import AddReviewForm from "./views/menu/reviews/AddReviewForm";
 
 function App() {
   useEffect(() => {
@@ -121,6 +123,12 @@ function App() {
           <Route path="/blogs/add" element={<AddBlogsForm />} />
           <Route path="/blogs/add/:id" element={<AddBlogsForm />} />
           {/* blogs Routes */}
+
+          {/* reviews Routes */}
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/reviews/add" element={<AddReviewForm />} />
+          <Route path="/reviews/add/:id" element={<AddReviewForm />} />
+          {/* reviews Routes */}
 
           {/* Sliders Routes */}
           <Route path="/sliders" element={<Sliders />} />
