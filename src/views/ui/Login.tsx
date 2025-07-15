@@ -74,16 +74,16 @@ const Login = () => {
         <div className="flex items-center flex-col w-full bg-white m-auto p-10 rounded-[15px] md:w-[80%] lg:w-[45%]">
           <div className="">
             <img
-              src="/assets/login/login_img.png"
+              src="/assets/logo.png"
               alt="loginImage"
-              className="object-contain w-[60%] m-auto"
+              className="object-contain w-[60%] m-auto h-32"
             />
           </div>
 
           <div className="w-full grow">
             <h1 className="text-[#969696] text-[45px] font-bold text-center">
               Login to{" "}
-              <span className="bg-gradient-to-b from-[#452CB3] to-[#C86DD7] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-b from-[#5bb48d] to-[#005430] bg-clip-text text-transparent">
                 True Balance
               </span>
             </h1>
@@ -139,7 +139,7 @@ const Login = () => {
             <div className="mt-10 flex justify-center items-center ">
               <button
                 type="submit"
-                className={`max-w-[350px] bg-gradient-to-b from-[#452CB3] to-[#C86DD7] text-xl py-3 rounded-lg grow text-white`}
+                className={`max-w-[350px] bg-gradient-to-b from-[#5bb48d] to-[#005430] text-xl py-3 rounded-lg grow text-white`}
               >
                 {isLoading ? (
                   <span className="loading loading-ring loading-md"></span>

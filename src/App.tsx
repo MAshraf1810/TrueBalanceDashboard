@@ -158,8 +158,8 @@ function App() {
 
           {/*booking */}
           {/* <Route path="/booking" element={<Booking />} /> */}
-          {/* <Route path="/booking/add" element={<AddBlogsForm />} /> */}
-          {/* <Route path="/booking/view/:id" element={<AddBlogsForm />} /> */}
+          {/* <Route path="/booking/add" element={<AddBookingForm />} /> */}
+          {/* <Route path="/booking/view/:id" element={<AddBookingForm />} /> */}
           {/* booking*/}
 
           {/* blocks*/}
