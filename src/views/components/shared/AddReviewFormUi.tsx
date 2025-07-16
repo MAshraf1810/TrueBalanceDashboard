@@ -8,7 +8,7 @@ interface Props {
 
 const AddReviewFormUi = ({ imagesPreview, setImagesPreview }: Props) => {
     return (
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg">
             <TextInputWithHook
                 label="English Text"
                 name="text.en"

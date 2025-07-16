@@ -9,7 +9,7 @@ interface Props {
 const AddingBlogFormUi = ({ imagesPreview, setImagesPreview }: Props) => {
 
     return (
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg">
             <TextInputWithHook label="English Title" name="title.en" placeholder="Enter English title..." />
             <TextInputWithHook label="Arabic Title" name="title.ar" placeholder="Enter Arabic title..." />
             <TextInputWithHook label="English Text" name="text.en" placeholder="Enter English text..." />
