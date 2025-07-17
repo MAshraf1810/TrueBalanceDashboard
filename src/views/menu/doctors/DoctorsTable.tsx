@@ -14,10 +14,10 @@ const DoctorsTable = ({
   onEdit,
 }: ProjectsTableProps) => {
   return (
-    <div className="overflow-x-auto">
-      <table className="table">
+    <div className="overflow-x-auto text-black">
+      <table className="table bg-white overflow-hidden rounded-[10px]">
         {/* head */}
-        <thead className="font-bold text-xl text-white">
+        <thead className="font-bold text-xl">
           <tr>
             {headers.map((header, index) => (
               <th key={index}>{header}</th>
@@ -25,18 +25,18 @@ const DoctorsTable = ({
             <th>Action</th>
           </tr>
         </thead>
-        <tbody className=" font-bold text-lg">
+        <tbody className="font-bold text-lg">
           {data?.length > 0 ? (
             data.map((doctor: Doctors, idx: number) => (
               <tr key={idx + 1}>
                 <td>{idx + 1}</td>
                 <td>{doctor.name}</td>
                 <td>{doctor.email}</td>
-                <td>{doctor.specialization}</td>
-                <td>{doctor.phone}</td>
                 <td>
                   <img src={doctor.image} alt="img" />
                 </td>
+                <td>{doctor.phone}</td>
+                <td>{doctor.specialization}</td>
                 <td className="flex items-center gap-3">
                   <button
                     onClick={() => onDelete(doctor.id)}
