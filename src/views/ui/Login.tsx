@@ -69,86 +69,95 @@ const Login = () => {
   const [isPasswordEyeOpen, setIsPasswordEyeOpen] = useState(false);
 
   return (
-    <div className="container mx-auto p-10 ">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex items-center flex-col w-full bg-white m-auto p-10 rounded-[15px] md:w-[80%] lg:w-[45%]">
-          <div className="">
-            <img
-              src="/assets/logo.png"
-              alt="loginImage"
-              className="object-contain w-[60%] m-auto h-32"
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-md bg-white p-6 sm:p-8 rounded-[15px] shadow-md"
+      >
+        <div className="flex flex-col items-center">
+          <img
+            src="/assets/logo.png"
+            alt="loginImage"
+            className="object-contain w-32 h-32 mb-4"
+          />
+
+          <h1 className="text-[#969696] text-3xl sm:text-4xl font-bold text-center">
+            Login to{" "}
+            <span className="bg-gradient-to-b from-[#5bb48d] to-[#005430] bg-clip-text text-transparent">
+              True Balance
+            </span>
+          </h1>
+
+          <p className="text-[#969696] text-sm text-center mt-2">
+            Welcome back! Please log in to access your account.
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <div className="flex flex-col gap-2 mb-5">
+            <label htmlFor="email" className="font-bold">
+              Email
+            </label>
+            <input
+              {...register("email")}
+              id="email"
+              className="input input-bordered w-full"
+              type="email"
+            />
+            {errors.email && (
+              <p className="text-[red] text-sm">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2 relative mb-2">
+            <label htmlFor="password" className="font-bold">
+              Password
+            </label>
+            {isPasswordEyeOpen ? (
+              <EyeIcon
+                width={20}
+                className="absolute cursor-pointer top-10 right-3"
+                onClick={() => setIsPasswordEyeOpen((prev) => !prev)}
+              />
+            ) : (
+              <EyeOff
+                width={20}
+                className="absolute cursor-pointer top-10 right-3"
+                onClick={() => setIsPasswordEyeOpen((prev) => !prev)}
+              />
+            )}
+            <input
+              {...register("password")}
+              id="password"
+              className="input input-bordered w-full pr-10"
+              type={isPasswordEyeOpen ? "text" : "password"}
             />
           </div>
 
-          <div className="w-full grow">
-            <h1 className="text-[#969696] text-[45px] font-bold text-center">
-              Login to{" "}
-              <span className="bg-gradient-to-b from-[#5bb48d] to-[#005430] bg-clip-text text-transparent">
-                True Balance
-              </span>
-            </h1>
+          {errors.password && (
+            <p className="text-[red] text-sm">{errors.password.message}</p>
+          )}
 
-            <h1 className="text-[#969696] text-sm text-center">
-              Welcome back! Please log in to access your account.
-            </h1>
-            <div className="mt-5">
-              <div className="flex flex-col gap-3 mb-5">
-                <label className="font-bold">Email</label>
-                <input
-                  {...register("email")}
-                  id="email"
-                  className="input input-bordered"
-                  type="email"
-                />
-                {errors.email && (
-                  <p className="text-[red] mt-2">{errors.email.message}</p>
-                )}
-              </div>
-              <div className="flex flex-col gap-3 relative">
-                <label className="font-bold">Password</label>
-                {isPasswordEyeOpen ? (
-                  <EyeIcon
-                    width={20}
-                    className="absolute cursor-pointer top-1/2 mt-1 right-3"
-                    onClick={() => setIsPasswordEyeOpen((prev) => !prev)}
-                  />
-                ) : (
-                  <EyeOff
-                    width={20}
-                    className="absolute cursor-pointer top-1/2 mt-1 right-3"
-                    onClick={() => setIsPasswordEyeOpen((prev) => !prev)}
-                  />
-                )}
-                <input
-                  {...register("password")}
-                  id="password"
-                  className="input input-bordered grow"
-                  type={isPasswordEyeOpen ? "text" : "password"}
-                />
-              </div>
-              {errors.password && (
-                <p className="text-[red] mt-2">{errors.password.message}</p>
-              )}
-              {apiError && (
-                <p className="text-[red] text-lg my-4">{apiError}</p>
-              )}
-              {/* <div className="flex justify-end mt-8 mb-4">
-                <p className="text-[#367AFF]">Forget Password?</p>
-              </div> */}
-            </div>
-            <div className="mt-10 flex justify-center items-center ">
-              <button
-                type="submit"
-                className={`max-w-[350px] bg-gradient-to-b from-[#5bb48d] to-[#005430] text-xl py-3 rounded-lg grow text-white`}
-              >
-                {isLoading ? (
-                  <span className="loading loading-ring loading-md"></span>
-                ) : (
-                  "Sign In"
-                )}
-              </button>
-            </div>
-          </div>
+          {apiError && (
+            <p className="text-[red] text-sm my-4">{apiError}</p>
+          )}
+        </div>
+
+        {/* <div className="flex justify-end mt-6">
+          <p className="text-[#367AFF] text-sm">Forget Password?</p>
+        </div> */}
+
+        <div className="mt-8 flex justify-center">
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-b from-[#5bb48d] to-[#005430] text-lg py-3 rounded-lg text-white font-medium"
+          >
+            {isLoading ? (
+              <span className="loading loading-ring loading-md"></span>
+            ) : (
+              "Sign In"
+            )}
+          </button>
         </div>
       </form>
     </div>
