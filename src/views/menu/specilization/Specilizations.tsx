@@ -1,170 +1,178 @@
 import { useState } from "react";
-import { useFetchSpecilizations } from "../../hooks/specializations/useFetchSpecilizations";
-import apiClient from "../../services/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast, ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { showModal } from "../../components/modals/showModel";
+import { closeModal } from "../../components/modals/closeModal";
+import TableActions from "../../components/shared/TableActions";
+import BlogsPagination from "../../ui/BlogsPagination";
+import Modal from "../../components/modals/Modal";
+import LoadingModal from "../../../modals/LoadingModal";
+import { useFetchSpecilizations } from "../../hooks/specializations/useFetchSpecilizations";
+import apiClient from "../../services/api-client";
+import SpecializationsTable from "./SpecilizationsTable";
 
 const Specilizations = () => {
-  const { data } = useFetchSpecilizations();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
+  const [currentPage, setCurrentPage] = useState<string>("1");
+  const [editId, setEditId] = useState<number | null>(null);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newService, setNewService] = useState({ ar: "", en: "" });
-  const [editServiceId, setEditServiceId] = useState<number | null>(null);
+  const [formData, setFormData] = useState({ en: "", ar: "" });
   const [loading, setLoading] = useState(false);
 
-  const handleDelete = async (id: number) => {
-    try {
-      setLoading(true);
-      await apiClient.delete(`/api/dashboard/specializations/${id}`);
-      queryClient.invalidateQueries({ queryKey: ["specilizations"] });
-      toast.success("Specialization deleted successfully!");
-    } catch (error) {
-      console.error("Failed to delete specialization:", error);
-      toast.error("Failed to delete specialization.");
-    } finally {
-      setLoading(false);
+  const { data, isLoading, isError, error } = useFetchSpecilizations(currentPage);
+
+  const handleEdit = (id: number) => {
+    const spec = data?.data?.find((s: any) => s.id === id);
+    if (spec) {
+      setFormData({ en: spec.name.en, ar: spec.name.ar });
+      setEditId(id);
+      setIsModalOpen(true);
     }
+  };
+
+  const handleDelete = (id: number) => {
+    setDeleteId(id);
+    showModal("specialization_deletion_modal");
   };
 
   const handleAddOrEdit = async () => {
     try {
       setLoading(true);
-      if (editServiceId) {
-        await apiClient.put(`/api/dashboard/specializations/${editServiceId}`, {
-          name: newService,
+      if (editId) {
+        await apiClient.put(`/api/dashboard/specializations/${editId}`, {
+          name: formData,
         });
-        toast.success("Specialization updated successfully!");
+        toast.success("Specialization updated!");
       } else {
-        await apiClient.post("/api/dashboard/specializations", {
-          name: newService,
+        await apiClient.post(`/api/dashboard/specializations`, {
+          name: formData,
         });
-        toast.success("Specialization added successfully!");
+        toast.success("Specialization added!");
       }
-
-      queryClient.invalidateQueries({ queryKey: ["specilizations"] });
-      setNewService({ ar: "", en: "" });
-      setEditServiceId(null);
       setIsModalOpen(false);
-    } catch (error) {
-      console.error("Failed to add/edit specialization:", error);
-      toast.error("Failed to add/edit specialization.");
+      setFormData({ en: "", ar: "" });
+      setEditId(null);
+      queryClient.invalidateQueries({ queryKey: ["specilizations"] });
+    } catch (e) {
+      toast.error("Failed to save specialization");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEditClick = (service: {
-    id: number;
-    name: { ar: string; en: string };
-  }) => {
-    setEditServiceId(service.id);
-    setNewService({ ar: service.name.ar, en: service.name.en });
-    setIsModalOpen(true);
+  const confirmDelete = async () => {
+    try {
+      setLoading(true);
+      await apiClient.delete(`/api/dashboard/specializations/${deleteId}`);
+      toast.success("Specialization deleted!");
+      queryClient.invalidateQueries({ queryKey: ["specilizations"] });
+    } catch (e) {
+      toast.error("Failed to delete specialization.");
+    } finally {
+      closeModal("specialization_deletion_modal");
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="p-6">
+      {loading && <LoadingModal />}
       <ToastContainer />
-      <h1 className="text-2xl font-bold text-center mb-6 text-white">
-        Available Specializations
-      </h1>
 
-      <button
-        className="bg-blue-600 text-white py-2 px-4 rounded-lg mb-4"
-        onClick={() => {
-          setNewService({ ar: "", en: "" });
-          setEditServiceId(null);
+      {/* Confirmation Modal */}
+      <Modal
+        modal_id="specialization_deletion_modal"
+        onConfirm={confirmDelete}
+        meta={{
+          confirm: t("teams:teams.modal.confirm"),
+          Cancel: t("teams:teams.modal.cancel"),
+          label: t("teams:teams.modal.delete.message"),
+        }}
+      />
+
+      {/* Top Actions */}
+      <TableActions
+        header="Specializations"
+        add="Add Specialization"
+        onAdd={() => {
+          setFormData({ en: "", ar: "" });
+          setEditId(null);
           setIsModalOpen(true);
         }}
-      >
-        Add New Specialization
-      </button>
+      />
 
-      <div className="overflow-x-auto">
-        <table className="w-full bg-white text-gray-800 rounded-lg overflow-hidden shadow">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="text-left p-4 border-b">ID</th>
-              <th className="text-left p-4 border-b">Name (EN)</th>
-              <th className="text-left p-4 border-b">Name (AR)</th>
-              <th className="text-left p-4 border-b">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.map((service) => (
-              <tr key={service.id} className="hover:bg-gray-50">
-                <td className="p-4 border-b">{service.id}</td>
-                <td className="p-4 border-b">{service.name.en}</td>
-                <td className="p-4 border-b">{service.name.ar}</td>
-                <td className="p-4 border-b space-x-2">
-                  <button
-                    onClick={() => handleEditClick(service)}
-                    className="bg-yellow-500 text-white py-1 px-3 rounded-lg text-sm"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(service.id)}
-                    className="bg-red-500 text-white py-1 px-3 rounded-lg text-sm"
-                    disabled={loading}
-                  >
-                    {loading ? "Deleting..." : "Delete"}
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {data?.length === 0 && (
-              <tr>
-                <td colSpan={4} className="text-center p-4 text-gray-500">
-                  No specializations found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      {/* Table */}
+      {!isLoading && !isError && (
+        <SpecializationsTable
+          headers={["ID", "Name (EN)", "Name (AR)"]}
+          data={data?.data || []}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
 
-      {/* Modal */}
+      {/* Pagination */}
+      {!isLoading && !isError && (
+        <div className="mt-8 text-white">
+          <BlogsPagination
+            setCurrentPage={(page) => setCurrentPage(page)}
+            blogs={data}
+          />
+        </div>
+      )}
+
+      {/* Loading Skeleton */}
+      {isLoading && (
+        <div className="skeleton h-32 w-full rounded-lg my-4"></div>
+      )}
+
+      {/* Error Alert */}
+      {isError && (
+        <div role="alert" className="alert alert-error">
+          <span>Error: {error?.message}</span>
+        </div>
+      )}
+
+      {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">
-              {editServiceId ? "Edit Specialization" : "Add New Specialization"}
+              {editId ? "Edit Specialization" : "Add Specialization"}
             </h2>
 
             <div className="mb-4">
-              <label className="block mb-1 font-semibold text-gray-700">
+              <label className="block font-semibold text-gray-700">
                 Name (EN)
               </label>
               <input
                 type="text"
                 className="w-full border border-gray-300 rounded-lg p-2"
-                value={newService.en}
-                onChange={(e) =>
-                  setNewService((prev) => ({ ...prev, en: e.target.value }))
-                }
+                value={formData.en}
+                onChange={(e) => setFormData({ ...formData, en: e.target.value })}
               />
             </div>
 
             <div className="mb-4">
-              <label className="block mb-1 font-semibold text-gray-700">
+              <label className="block font-semibold text-gray-700">
                 Name (AR)
               </label>
               <input
                 type="text"
                 className="w-full border border-gray-300 rounded-lg p-2"
-                value={newService.ar}
-                onChange={(e) =>
-                  setNewService((prev) => ({ ...prev, ar: e.target.value }))
-                }
+                value={formData.ar}
+                onChange={(e) => setFormData({ ...formData, ar: e.target.value })}
               />
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
               <button
-                className="bg-gray-500 text-white py-2 px-4 rounded-lg mr-2"
                 onClick={() => setIsModalOpen(false)}
+                className="bg-gray-500 text-white py-2 px-4 rounded-lg"
               >
                 Cancel
               </button>
@@ -173,13 +181,7 @@ const Specilizations = () => {
                 className="bg-blue-600 text-white py-2 px-4 rounded-lg"
                 disabled={loading}
               >
-                {loading
-                  ? editServiceId
-                    ? "Updating..."
-                    : "Adding..."
-                  : editServiceId
-                    ? "Update"
-                    : "Add"}
+                {editId ? "Update" : "Add"}
               </button>
             </div>
           </div>

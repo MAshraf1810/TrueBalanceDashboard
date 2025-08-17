@@ -16,12 +16,17 @@ export interface specialization {
 
 const DOCTORS_API_ENDPOINT = "/api/dashboard/specializations";
 // API Functions
-export const getSpecializations = async () => {
-  const res = await apiClient.get<FetchSpecializationsResponse>(
-    `${DOCTORS_API_ENDPOINT}`
-  );
-  console.log("specializations", res.data.data);
-  return res.data.data;
+export const getSpecializations = async (page = "1") => {
+  const res = await apiClient.get<{
+    data: specialization[];
+    meta: {
+      current_page: number;
+      last_page: number;
+      total: number;
+    };
+  }>(`${DOCTORS_API_ENDPOINT}?page=${page}`);
+
+  return res.data;
 };
 
 export const addDoctorMutation = async ({
