@@ -13,13 +13,14 @@ import {
   serviceFormValues,
   updateServiceSchema,
 } from "../../components/zod-schema/addServiceSchema";
-import AddingServiceFormUi from "../../components/one-time/AddingServiceFormUi";
 import { useFetchService } from "../../hooks/services/useFetchService";
 import TextEditor from "../../components/shared/TextEditor";
 
 const AddServicesForm: React.FC = () => {
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
   const [oldImagesPreview, setOldImagesPreview] = useState("");
+  const [descriptionAr, setDescriptionAr] = useState<string>("");
+  const [descriptionEn, setDescriptionEn] = useState<string>("");
   const [serviceId, setServiceId] = useState("");
 
   const params = useParams();
@@ -32,12 +33,12 @@ const AddServicesForm: React.FC = () => {
   });
 
   const images = methods.watch("images");
+
   const handleImagesChange = useCallback((images: File[] | null) => {
     if (images) {
       const urls = Array.from(images).map((img) => URL.createObjectURL(img));
       setImagesPreview(urls);
 
-      // Clean up URLs when component unmounts or images change
       return () => {
         urls.forEach((url) => URL.revokeObjectURL(url));
       };
@@ -46,14 +47,8 @@ const AddServicesForm: React.FC = () => {
 
   useEffect(() => {
     const cleanup = handleImagesChange(images);
-
-    // Cleanup on component unmount or when images change
     return () => cleanup && cleanup();
   }, [images, handleImagesChange]);
-
-  const handleDeleteProjectImage = (ImageId: number) => {
-    mutateImageDeletion(ImageId);
-  };
 
   const {
     isError,
@@ -76,116 +71,158 @@ const AddServicesForm: React.FC = () => {
     error: fetchServiceError,
   } = useFetchService(serviceId || "");
 
-  const onSubmit = (data: serviceFormValues) => {
+  const handleDeleteProjectImage = (ImageId: number) => {
+    mutateImageDeletion(ImageId);
+  };
+
+  const onSubmit = async (data: serviceFormValues) => {
     const formData = new FormData();
 
-    // Map keys to append values dynamically
-    const fields = [
-      { key: "title[en]", value: data.titleEn },
-      { key: "title[ar]", value: data.titleAr },
-      { key: "text[en]", value: descriptionEn },
-      { key: "text[ar]", value: descriptionAr },
-    ];
+    // Append text fields
+    formData.append("title[en]", data.titleEn);
+    formData.append("title[ar]", data.titleAr);
+    formData.append("text[en]", descriptionEn);
+    formData.append("text[ar]", descriptionAr);
 
-    if (serviceId) fields.push({ key: "_method", value: "put" });
+    // Laravel method spoofing
+    if (serviceId) formData.append("_method", "put");
 
-    fields.forEach(({ key, value }) => formData.append(key, value));
-
-    // Ensure images are correctly appended
-    if (Array.isArray(data.images)) {
-      data.images.forEach((img, idx) => {
-        if (img instanceof File) {
-          console.log(`Appending image[${idx}]`, img);
-          formData.append(`icon`, img); // Append actual file
-        } else {
-          console.error(`Invalid file at index ${idx}`, img);
-        }
-      });
-    } else {
-      console.error("Images field is not an array!");
+    // Append image (only if selected)
+    if (Array.isArray(data.images) && data.images.length > 0) {
+      const image = data.images[0];
+      if (image instanceof File && image.type.startsWith("image/")) {
+        formData.append("icon", image);
+      } else {
+        console.error("Invalid image file format!");
+        return;
+      }
     }
 
-    serviceId
-      ? addServiceMutation({ formData, serviceId })
-      : addServiceMutation({ formData });
+    // Debug log
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
 
-
-    setTimeout(() => {
-      navigate("/services");
-    }, 2500);
-    
-    methods.reset();
-
-    setImagesPreview([]);
+    try {
+      await addServiceMutation(serviceId ? { formData, serviceId } : { formData });
+      methods.reset();
+      setImagesPreview([]);
+      setTimeout(() => {
+        navigate("/services");
+      }, 1500);
+    } catch (err) {
+      console.error("Submission failed:", err);
+    }
   };
 
   useEffect(() => {
-    if (params) {
-      const ID = params?.id;
-      if (ID) {
-        setServiceId(ID);
-        console.log("o=>", ID);
-      }
+    if (params?.id) {
+      setServiceId(params.id);
     }
   }, [params]);
 
   useEffect(() => {
-    if (serviceId) {
+    if (serviceId && serviceData) {
       methods.reset({
-        titleAr: serviceData?.title?.ar,
-        titleEn: serviceData?.title?.en,
+        titleAr: serviceData.title?.ar,
+        titleEn: serviceData.title?.en,
       });
-
-      if (serviceData) setDescriptionAr(serviceData?.text.ar);
-      if (serviceData) setDescriptionEn(serviceData?.text.en);
-
-      if (serviceData?.icon) setOldImagesPreview(serviceData?.icon);
+      setDescriptionAr(serviceData.text?.ar || "");
+      setDescriptionEn(serviceData.text?.en || "");
+      setOldImagesPreview(serviceData.icon || "");
     }
-  }, [serviceData, methods.reset]);
-  const [descriptionAr, setDescriptionAr] = useState<string>("");
-  const [descriptionEn, setDescriptionEn] = useState<string>("");
+  }, [serviceData, serviceId, methods]);
+
   return (
     <FormProvider {...methods}>
       <div className="container mx-auto p-4">
         <ToastContainer />
 
-        {/* Fetching Projects */}
         {isError && <p className="error-message">{error.message}</p>}
         {isFetchServiceError && (
           <p className="error-message">{fetchServiceError.message}</p>
         )}
-
-        {/* Fetching Project For Update */}
-        {isPending && <LoadingModal />}
-        {isServiceFetching && <LoadingModal />}
-
-        {/* Delete Image States */}
-        {isDeleteImageLoading && <LoadingModal />}
+        {(isPending || isServiceFetching || isDeleteImageLoading) && (
+          <LoadingModal />
+        )}
         {isDeleteImageError && (
           <p className="error-message">{deleteImageError.message}</p>
         )}
 
-        <h1 className="text-3xl font-serif font-semibold mb-4">Add Service</h1>
+        <h1 className="text-3xl font-serif font-semibold mb-4">
+          {serviceId ? "Update Service" : "Add Service"}
+        </h1>
 
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <AddingServiceFormUi />
+          {/* Title AR */}
+          <div className="form-control mb-4">
+            <label className="label font-medium">Title (AR)</label>
+            <input
+              {...methods.register("titleAr")}
+              type="text"
+              placeholder="أدخل العنوان باللغة العربية"
+              className="input input-bordered w-full"
+            />
+            {methods.formState.errors.titleAr && (
+              <p className="text-red-500 text-sm mt-1">
+                {methods.formState.errors.titleAr.message}
+              </p>
+            )}
+          </div>
+
+          {/* Title EN */}
+          <div className="form-control mb-4">
+            <label className="label font-medium">Title (EN)</label>
+            <input
+              {...methods.register("titleEn")}
+              type="text"
+              placeholder="Enter title in English"
+              className="input input-bordered w-full"
+            />
+            {methods.formState.errors.titleEn && (
+              <p className="text-red-500 text-sm mt-1">
+                {methods.formState.errors.titleEn.message}
+              </p>
+            )}
+          </div>
+
+          {/* Image Upload */}
+          <div className="form-control mb-4">
+            <label className="label font-medium">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="file-input file-input-bordered w-full"
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  methods.setValue("images", [files[0]]);
+                } else {
+                  methods.setValue("images", []);
+                }
+              }}
+            />
+          </div>
+
+          {/* Description Editors */}
           <div className="mt-4">
             <TextEditor
               onChange={setDescriptionAr}
               value={descriptionAr}
-              label="Description(Ar)"
+              label="Description (AR)"
             />
             <TextEditor
               onChange={setDescriptionEn}
               value={descriptionEn}
-              label="Description(En)"
+              label="Description (EN)"
             />
           </div>
+
+          {/* Previews */}
           {imagesPreview.length > 0 && (
             <ImagesPreviewUi imagesPreviewUrls={imagesPreview} />
           )}
-
-          {oldImagesPreview?.length > 0 && (
+          {oldImagesPreview && (
             <OldImagesPreviewUi
               oldImagesPreview={oldImagesPreview}
               onDeleteProjectImage={(id) => handleDeleteProjectImage(id)}
@@ -197,7 +234,7 @@ const AddServicesForm: React.FC = () => {
               type="submit"
               className="btn bg-bruColorLight1 hover:bg-bruColorLight1 px-12 my-8"
             >
-              Add Service
+              {serviceId ? "Update Service" : "Add Service"}
             </button>
           </div>
         </form>

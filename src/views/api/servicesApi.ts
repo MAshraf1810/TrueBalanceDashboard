@@ -35,15 +35,14 @@ export const addServiceMutation = async ({
   formData: FormData;
   serviceId?: string;
 }) => {
-  // Make a POST request to delete the project
-
-  const POST_END_POINT = serviceId
+  const endpoint = serviceId
     ? `${SERVICES_API_ENDPOINT}/${serviceId}`
     : SERVICES_API_ENDPOINT;
 
-  console.log("Tas=>",POST_END_POINT);
-  const res = await apiClient.post(POST_END_POINT, formData);
-  console.log(res.data.data);
+  const res = serviceId
+    ? await apiClient.post(endpoint, formData)
+    : await apiClient.post(endpoint, formData);
+
   return res.data.data;
 };
 
