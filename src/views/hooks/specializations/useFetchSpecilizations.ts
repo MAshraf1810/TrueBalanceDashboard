@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSpecializations } from "../../api/specilizationsApi";
 
-export const useFetchSpecilizations = (page: string) => {
+export const useFetchSpecilizations = (page: string = "1") => {
   return useQuery({
     queryKey: ["specilizations", page],
     queryFn: () => getSpecializations(page),

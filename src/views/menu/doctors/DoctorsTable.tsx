@@ -33,7 +33,7 @@ const DoctorsTable = ({
                 <td>{doctor.name}</td>
                 <td>{doctor.email}</td>
                 <td>
-                  <img src={doctor.image} alt="img" />
+                  <img src={doctor.image} className="w-48" alt="img" />
                 </td>
                 <td>{doctor.phone}</td>
                 <td>{doctor.specialization}</td>

@@ -159,13 +159,13 @@ const Sidebar = ({ isOpen }: { isOpen: (bool: boolean) => void }) => {
             <FaSlideshare />
             <span className="capitalize ">Sliders</span>
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to={`/clients`}
             className={({ isActive }) => (isActive ? activeLink : normalLink)}
           >
             <RiUserSearchFill />
             <span className="capitalize ">Sponsors</span>
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to={`/reviews`}
             className={({ isActive }) => (isActive ? activeLink : normalLink)}

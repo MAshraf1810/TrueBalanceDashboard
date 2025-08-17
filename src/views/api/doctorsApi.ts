@@ -18,6 +18,7 @@ export interface Doctors {
   image: string;
   phone: string;
   specialization: string;
+  type: "doctor" | "therapist";
 }
 
 const DOCTORS_API_ENDPOINT = "/api/dashboard/doctors";

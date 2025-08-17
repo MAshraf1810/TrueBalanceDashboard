@@ -3,7 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import LoadingModal from "../../../modals/LoadingModal";
 import { ToastContainer } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDeleteProjectImageMutation } from "../../hooks/projects/useDeleteProjectImageMutation";
 import ImagesPreviewUi from "../../components/shared/ImagesPreviewUi";
 import OldImagesPreviewUi from "../../components/shared/OldImagesPreviewUi";
@@ -16,6 +16,7 @@ import {
 import { useFetchDoctor } from "../../hooks/doctors/useFetchDoctor";
 import { useAddDoctorMutation } from "../../hooks/doctors/useAddDoctorMutation";
 import { useFetchSpecilizations } from "../../hooks/specializations/useFetchSpecilizations";
+import { toast } from "react-toastify";
 
 const AddDoctorForm: React.FC = () => {
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
@@ -24,6 +25,7 @@ const AddDoctorForm: React.FC = () => {
   const [specilize, setSpecilize] = useState(0);
 
   const params = useParams();
+  const navigate = useNavigate();
 
   const schema = doctorId ? updateDoctorSchema : addDoctorSchema;
 
@@ -80,15 +82,15 @@ const AddDoctorForm: React.FC = () => {
     error: fetchServiceError,
   } = useFetchDoctor(doctorId || "");
 
-  const onSubmit = (data: DoctorFormValues) => {
+  const onSubmit = async (data: DoctorFormValues) => {
     const formData = new FormData();
 
-    // Map keys to append values dynamically
     const fields = [
       { key: "name", value: data.name },
       { key: "email", value: data.email },
       { key: "phone", value: data.phone },
       { key: "specialization_id", value: data.specializationId },
+      { key: "type", value: data.type },
     ];
 
     if (doctorId) fields.push({ key: "_method", value: "put" });
@@ -96,25 +98,36 @@ const AddDoctorForm: React.FC = () => {
 
     fields.forEach(({ key, value }) => formData.append(key, value));
 
-    // Ensure images are correctly appended
     if (Array.isArray(data.images)) {
       data.images.forEach((img, idx) => {
         if (img instanceof File) {
-          console.log(`Appending image[${idx}]`, img);
-          formData.append(`image`, img); // Append actual file
+          formData.append("image", img);
         } else {
           console.error(`Invalid file at index ${idx}`, img);
         }
       });
-    } else {
-      console.error("Images field is not an array!");
     }
 
-    doctorId
-      ? addServiceMutation({ formData, serviceId: doctorId })
-      : addServiceMutation({ formData });
+    try {
+      if (doctorId) {
+        await addServiceMutation({ formData, serviceId: doctorId });
+        toast.success("Doctor updated successfully!");
+      } else {
+        await addServiceMutation({ formData });
+        toast.success("Doctor added successfully!");
+      }
 
-    setImagesPreview([]);
+      setImagesPreview([]);
+
+      // Delay navigation to allow toast to display
+      setTimeout(() => {
+        navigate("/doctors");
+      }, 1500); // 1.5 seconds
+
+    } catch (err) {
+      console.error("Failed to submit doctor:", err);
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -133,6 +146,7 @@ const AddDoctorForm: React.FC = () => {
         email: doctorData?.email,
         name: doctorData?.name,
         phone: doctorData?.phone,
+        type: doctorData?.type ?? "doctor",
       });
 
       if (doctorData?.image) setOldImagesPreview(doctorData?.image);
@@ -141,16 +155,17 @@ const AddDoctorForm: React.FC = () => {
   const { data: specilizations } = useFetchSpecilizations();
 
   useEffect(() => {
-    if (doctorData?.specialization) {
-      const targetSpecilize = specilizations?.find(
-        (item) => item.name.en === doctorData?.specialization
+    if (doctorData?.specialization && specilizations?.data) {
+      const targetSpecilize = specilizations.data.find(
+        (item) => item.name.en === doctorData.specialization
       );
       if (targetSpecilize) {
         console.log("ososos=>", targetSpecilize);
         setSpecilize(targetSpecilize.id);
       }
     }
-  }, [doctorData]);
+  }, [doctorData, specilizations]);
+
   return (
     <FormProvider {...methods}>
       <div className="container mx-auto p-4">
@@ -178,18 +193,30 @@ const AddDoctorForm: React.FC = () => {
 
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <AddingServiceFormUi />
-          <div className="mt-4">
-            <h1 className="text-xl font-bold">Specilization</h1>
-            <select
-              {...methods.register("specializationId")}
-              className="select input-bordered mt-4"
-            >
-              {specilizations?.map((item) => (
-                <option selected={item.id === specilize} value={item.id}>
-                  {item.name?.en} / {item.name?.ar}
-                </option>
-              ))}
-            </select>
+          <div className="mt-4 flex flex-col md:flex-row gap-8">
+            <div className="w-full md:w-1/2">
+              <label className="block text-xl font-bold mb-2">Specialization</label>
+              <select
+                {...methods.register("specializationId")}
+                className="w-full border border-gray-300 rounded-lg p-2"
+              >
+                {specilizations?.data?.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name?.en} / {item.name?.ar}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="w-full md:w-1/2">
+              <label className="block text-xl font-bold mb-2">Type</label>
+              <select
+                {...methods.register("type")}
+                className="w-full border border-gray-300 rounded-lg p-2"
+              >
+                <option value="doctor">Doctor</option>
+                <option value="therapist">Therapist</option>
+              </select>
+            </div>
           </div>
 
           {imagesPreview.length > 0 && (

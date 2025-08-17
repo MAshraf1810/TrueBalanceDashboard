@@ -17,6 +17,7 @@ export const addDoctorSchema = z.object({
   specializationId: z
     .string()
     .min(1, { message: "Specialization ID is required!" }),
+  type: z.enum(["doctor", "therapist"]),
   images: z
     .array(z.instanceof(File), { message: "Invalid file format!" })
     .min(1, { message: "At least one image must be selected!" }),
