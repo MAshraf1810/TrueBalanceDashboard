@@ -1,19 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { Pages } from "../../api/pagesApi";
 
-interface ProjectsTableProps {
+interface PagesTableProps {
   headers: string[];
   lang: "en" | "ar";
   data: Pages[];
 }
 
-const PagesTable = ({ data, headers, lang}: ProjectsTableProps) => {
+const PagesTable = ({ data, headers, lang }: PagesTableProps) => {
   const navigate = useNavigate();
+
   return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
+    <div className="overflow-x-auto text-black">
+      <table className="table bg-white overflow-hidden rounded-[10px]">
+        <thead className="font-bold text-xl">
           <tr>
             {headers.map((header, index) => (
               <th key={index}>{header}</th>
@@ -21,14 +21,14 @@ const PagesTable = ({ data, headers, lang}: ProjectsTableProps) => {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="font-bold text-lg">
           {data?.length > 0 ? (
             data.map((page: Pages, idx: number) => (
               <tr
-                className="cursor-pointer"
-                key={idx}
+                key={page.id}
+                className="cursor-pointer hover:bg-gray-100 transition"
                 onClick={() =>
-                  navigate(`/pages/details/${idx}`, { state: page })
+                  navigate(`/pages/details/${page.id}`, { state: page })
                 }
               >
                 <td>{idx + 1}</td>
@@ -38,9 +38,9 @@ const PagesTable = ({ data, headers, lang}: ProjectsTableProps) => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate(`/pages/add/${idx}`, { state: page })
+                      navigate(`/pages/add/${page.id}`, { state: page });
                     }}
-                    className="btn btn-sm bg-bruColorLight3 "
+                    className="btn btn-xs bg-bruColorLight3"
                   >
                     Edit
                   </button>

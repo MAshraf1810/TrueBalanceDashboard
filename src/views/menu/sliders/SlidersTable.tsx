@@ -1,6 +1,6 @@
 import { Sliders } from "../../api/slidersApi";
 
-interface ProjectsTableProps {
+interface SlidersTableProps {
   headers: string[];
   lang: "en" | "ar";
   data: Sliders[];
@@ -14,12 +14,11 @@ const SlidersTable = ({
   lang,
   onDelete,
   onEdit,
-}: ProjectsTableProps) => {
+}: SlidersTableProps) => {
   return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
+    <div className="overflow-x-auto text-black">
+      <table className="table bg-white overflow-hidden rounded-[10px]">
+        <thead className="font-bold text-xl">
           <tr>
             {headers.map((header, index) => (
               <th key={index}>{header}</th>
@@ -27,23 +26,23 @@ const SlidersTable = ({
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="font-bold text-lg">
           {data?.length > 0 ? (
-            data.map((slider: Sliders) => (
-              <tr key={slider.id}>
-                <td>{slider.id}</td>
+            data.map((slider: Sliders, idx: number) => (
+              <tr key={slider.id} className="hover:bg-gray-100 transition">
+                <td>{idx + 1}</td>
                 <td>{slider.title[lang]}</td>
                 <td>{slider.text[lang]}</td>
                 <td className="flex items-center gap-3">
                   <button
                     onClick={() => onDelete(slider.id)}
-                    className="btn btn-xs bg-bruColorLight2 "
+                    className="btn btn-xs bg-bruColorLight2"
                   >
                     Delete
                   </button>
                   <button
                     onClick={() => onEdit(slider.id)}
-                    className="btn btn-xs bg-bruColorLight3 "
+                    className="btn btn-xs bg-bruColorLight3"
                   >
                     Edit
                   </button>

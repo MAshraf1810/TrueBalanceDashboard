@@ -51,7 +51,7 @@ const Pages = () => {
       <ToastContainer />
       <TableActions
         header={"Pages"}
-        add={""}
+        add={"Add Page"}
         onAdd={() => navigate("/pages/add")}
       />
       {!isLoading && !isError && (

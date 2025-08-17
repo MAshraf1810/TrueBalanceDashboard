@@ -55,7 +55,7 @@ const Settings = () => {
       <ToastContainer />
       <Modal
         modal_id="slider_deletion_model"
-        onConfirm={()=>console.log('s')}
+        onConfirm={() => console.log('s')}
         meta={{
           confirm: `${t("teams:teams.modal.confirm")}`,
           Cancel: `${t("teams:teams.modal.cancel")}`,
@@ -72,6 +72,7 @@ const Settings = () => {
           headers={headers}
           data={data!}
           lang="en"
+          onEdit={(id) => navigate(`/settings/add/${id}`)}
         />
       )}
     </div>

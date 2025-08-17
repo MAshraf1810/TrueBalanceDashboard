@@ -5,15 +5,12 @@ interface SettingsTableProps {
   lang: "en" | "ar";
   data: SettingsType;
   onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
 }
 
 const SettingsTable = ({
   data,
   headers,
   lang,
-  onEdit,
-  onDelete,
 }: SettingsTableProps) => {
   return (
     <div className="overflow-x-auto text-black">
@@ -23,7 +20,6 @@ const SettingsTable = ({
             {headers.map((header, index) => (
               <th key={index}>{header}</th>
             ))}
-            <th>Action</th>
           </tr>
         </thead>
         <tbody className="font-bold text-lg">
@@ -33,18 +29,6 @@ const SettingsTable = ({
               <td>{data.title[lang]}</td>
               <td>{data.address[lang]}</td>
               <td className="flex items-center gap-3">
-                <button
-                  onClick={() => onDelete(data.id)}
-                  className="btn btn-xs bg-bruColorLight2"
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={() => onEdit(data.id)}
-                  className="btn btn-xs bg-bruColorLight3"
-                >
-                  Edit
-                </button>
               </td>
             </tr>
           ) : (
